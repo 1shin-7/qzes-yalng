@@ -17,7 +17,7 @@ import {
 import { DateTimePicker } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import {
-	IconBrandGithubFilled,
+	IconBrandGithub,
 	IconChevronDown,
 	IconChevronUp,
 } from "@tabler/icons-react";
@@ -26,6 +26,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./App.module.css";
 import "@mantine/dates/styles.css";
 import dayjs from "dayjs";
+import Annoucement from "./components/Annoucement";
 import type { FTNAdvanced, FTNAttributes } from "./types";
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
 
 	// 如果localstorage有qzes_data的数据就读取并解析json，否则用创建一个具有默认值的FTNAttribute
 	const qzesDataRaw = localStorage.getItem("qzes_data");
-	const advanceRaw = localStorage.getItem("qzes_advance");
+	const advancedRaw = localStorage.getItem("qzes_advance");
 
 	const [qzesData, setData] = useState<FTNAttributes>(
 		qzesDataRaw
@@ -50,16 +51,15 @@ function App() {
 					backDate: new Date(),
 				},
 	);
-	const [advanceAttr, setAdvanceData] = useState<FTNAdvanced>(
-		advanceRaw
-			? JSON.parse(advanceRaw)
+	const [advancedAttr, setAdvancedData] = useState<FTNAdvanced>(
+		advancedRaw
+			? JSON.parse(advancedRaw)
 			: {
 					header: "经家长确认，班主任批准，教官备案，同意",
 					extra: ["noComma"],
 				},
 	);
 
-	// 仅加载图片一次
 	useEffect(() => {
 		const loadImage = async () => {
 			try {
@@ -89,12 +89,12 @@ function App() {
 				const h = ctx.canvas.height;
 
 				ctx.clearRect(0, 0, w, h);
-				ctx.fillStyle = "#f8f9fa"; // --mantine-color-gray-0
-				ctx.fillRect(0, 0, w, h);
+				// ctx.fillStyle = "#f8f9fa"; // --mantine-color-gray-0
+				// ctx.fillRect(0, 0, w, h);
 
 				// 标题
 				ctx.fillStyle = "#000";
-				ctx.font = `bold 72px '宋体'`;
+				ctx.font = `bold 72px 'SimSun'`;
 				ctx.fillText("出 行 条", w / 2 - (72 - 10) * 3, 40 + 80); // 72 - 10 is a magic idk why but it works
 
 				// 外框
@@ -102,22 +102,22 @@ function App() {
 				ctx.strokeRect(40, 40, w - 80, h - 80);
 
 				// Logo
-				if (qzesLogo && !advanceAttr.extra.includes("noLogo")) {
+				if (qzesLogo && !advancedAttr.extra.includes("noLogo")) {
 					ctx.drawImage(qzesLogo, w - qzesLogo.width - 32, 64, 176, 176);
 				}
 
 				// 头部
-				ctx.font = `38px '黑体'`;
-				ctx.fillText(`${advanceAttr.header}：`, 48, 220);
+				ctx.font = `38px 'SimHei'`;
+				ctx.fillText(`${advancedAttr.header}：`, 48, 220);
 
 				// 正文
 				ctx.fillText(
-					`班${advanceAttr.extra.includes("noComma") ? "" : "，"}`,
+					`班${advancedAttr.extra.includes("noComma") ? "" : "，"}`,
 					268,
 					328,
 				);
 				ctx.fillText(
-					`宿舍${advanceAttr.extra.includes("noComma") ? "" : "，"}`,
+					`宿舍${advancedAttr.extra.includes("noComma") ? "" : "，"}`,
 					566,
 					328,
 				);
@@ -128,14 +128,16 @@ function App() {
 				ctx.fillText("返校时间：", 528, 424);
 
 				// 附加信息
-				ctx.font = `bold 52px '宋体'`;
+				ctx.font = `bold 52px 'SimSun'`;
 				ctx.fillText(`${qzesData.cls}`, 116, 338); // 班级
 				ctx.fillText(`${qzesData.dormitory}`, 365, 338); // 宿舍
+
+				ctx.font = `bold 52px 'SimSun'`;
 				ctx.fillText(`${qzesData.name}`, 712, 338); // 名字
 
 				// 日期
-				if (!advanceAttr.extra.includes("noDate")) {
-					ctx.font = `bold 38px '宋体`;
+				if (!advancedAttr.extra.includes("noDate")) {
+					ctx.font = `bold 38px 'SimSun'`;
 					ctx.fillText(
 						dayjs(qzesData.leaveDate).format("MM月D日HH：mm"),
 						224,
@@ -151,12 +153,12 @@ function App() {
 				setCanvasData(canvasRef.current.toDataURL());
 			}
 		}
-	}, [qzesData, advanceAttr, qzesLogo]);
+	}, [qzesData, advancedAttr, qzesLogo]);
 
 	const download = () => {
 		if (canvasRef.current) {
 			const link = document.createElement("a");
-			link.download = `qzes_${qzesData.name}_${dayjs().format("YYYYMMDDHHmmss")}.jpg`;
+			link.download = `qzes_${qzesData.name}_${dayjs().format("YYYYMMDDHHmmss")}.png`;
 			link.href = canvasRef.current.toDataURL();
 			link.click();
 		}
@@ -164,9 +166,9 @@ function App() {
 
 	useEffect(() => {
 		localStorage.setItem("qzes_data", JSON.stringify(qzesData));
-		localStorage.setItem("qzes_advance", JSON.stringify(advanceAttr));
+		localStorage.setItem("qzes_advance", JSON.stringify(advancedAttr));
 		draw();
-	}, [qzesData, advanceAttr, draw]);
+	}, [qzesData, advancedAttr, draw]);
 
 	useEffect(draw, []);
 
@@ -175,17 +177,17 @@ function App() {
 			<ActionIcon
 				component="a"
 				href="https://github.com/1shin-7/qzes-yalng"
-				variant="default"
+				variant="light"
 				radius="xl"
 				aria-label="Github"
-				size="md"
+				size="lg"
 				className={classes.githubIcon}
 			>
-				<IconBrandGithubFilled />
+				<IconBrandGithub size={20} />
 			</ActionIcon>
-			<div className={classes.appBox}>
+			<Flex className={classes.appBox} gap="sm" direction="column">
 				<div className={classes.appTitle}>
-					<Title order={1}>QZES</Title>
+					<Title order={1}>QZES Yalng</Title>
 				</div>
 				<Paper shadow="sm" p="lg" radius="md" withBorder>
 					<SimpleGrid cols={{ base: 1, sm: 2 }}>
@@ -196,7 +198,12 @@ function App() {
 								width={1100}
 								height={500}
 							/>
-							<MantineImage src={canvasData} radius="md" alt="qzes" />
+							<MantineImage
+								src={canvasData}
+								radius="md"
+								alt="qzes"
+								bg="gray.0"
+							/>
 							<Flex gap="sm" wrap="wrap">
 								<Button
 									className={classes.dlBtn}
@@ -243,7 +250,7 @@ function App() {
 								<Grid.Col
 									span={{
 										base: 6,
-										xs: advanceAttr.extra.includes("withSign") ? 3 : 6,
+										xs: advancedAttr.extra.includes("withSign") ? 3 : 6,
 										md: 2,
 									}}
 								>
@@ -264,7 +271,7 @@ function App() {
 										md: 6,
 									}}
 									className={
-										advanceAttr.extra.includes("withSign")
+										advancedAttr.extra.includes("withSign")
 											? undefined
 											: classes.hidden
 									}
@@ -316,9 +323,9 @@ function App() {
 												<Switch.Group
 													label="样式选项"
 													description="自定义样式选项."
-													value={advanceAttr.extra}
+													value={advancedAttr.extra}
 													onChange={(e) =>
-														setAdvanceData({ ...advanceAttr, extra: e })
+														setAdvancedData({ ...advancedAttr, extra: e })
 													}
 												>
 													<Group mt="xs">
@@ -333,10 +340,10 @@ function App() {
 												<TextInput
 													label="开头"
 													description="离校条开头，注意周末版本不包含逗号以及LOGO，如有需要自行删改"
-													value={advanceAttr.header}
+													value={advancedAttr.header}
 													onChange={(d) => {
-														setAdvanceData({
-															...advanceAttr,
+														setAdvancedData({
+															...advancedAttr,
 															header: d.target.value,
 														});
 													}}
@@ -349,7 +356,8 @@ function App() {
 						</div>
 					</SimpleGrid>
 				</Paper>
-			</div>
+				<Annoucement setData={setData} setExtra={setAdvancedData} />
+			</Flex>
 		</>
 	);
 }
