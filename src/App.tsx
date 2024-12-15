@@ -37,6 +37,7 @@ function App() {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	const [canvasData, setCanvasData] = useState(canvasRef.current?.toDataURL());
+	const [logoUrl, SetLogoUrl] = useState<string>("logo.jpg");
 	const [qzesLogo, setLogo] = useState<HTMLImageElement | null>(null);
 
 	// 如果localstorage有qzes_data的数据就读取并解析json，否则用创建一个具有默认值的FTNAttribute
@@ -67,7 +68,7 @@ function App() {
 	useEffect(() => {
 		const loadImage = async () => {
 			try {
-				const response = await fetch("/logo.jpg");
+				const response = await fetch(logoUrl);
 				if (!response.ok) throw new Error("Failed to fetch image");
 
 				const blob = await response.blob();
@@ -83,7 +84,7 @@ function App() {
 		};
 
 		loadImage();
-	}, []); // 只在组件挂载时执行一次
+	}, [logoUrl]);
 
 	const draw = useCallback(() => {
 		if (canvasRef.current) {
@@ -107,7 +108,7 @@ function App() {
 
 				// Logo
 				if (qzesLogo && !advancedAttr.extra.includes("noLogo")) {
-					ctx.drawImage(qzesLogo, w - qzesLogo.width - 32, 64, 176, 176);
+					ctx.drawImage(qzesLogo, w - 176 - 42, 64, 176, 176);
 				}
 
 				// 头部
@@ -364,6 +365,11 @@ function App() {
 													onChange={(d) =>
 														setAdvancedData({ ...advancedAttr, bgColor: d })
 													}
+													onChangeEnd={(e) => {
+														if (!e.startsWith("#ffffff")) {
+															SetLogoUrl("logo.png");
+														} // 彩色背景时切换为透明图像
+													}}
 												/>
 											</Grid.Col>
 										</Grid>

@@ -24,6 +24,7 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 					setExtra((prev) => {
 						return {
 							...prev,
+							header: prev.header.replace(/[,，]/g, ""),
 							extra: ["noLogo", "withSign", "noDate"],
 						};
 					});
