@@ -6,10 +6,11 @@ import "@mantine/core/styles.css";
 import { MantineProvider } from "@mantine/core";
 import App from "./App.tsx";
 
+// biome-ignore lint/style/noNonNullAssertion: <explanation>
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <MantineProvider defaultColorScheme="auto">
-      <App />
-    </MantineProvider>
-  </StrictMode>
+	<StrictMode>
+		<MantineProvider defaultColorScheme="auto">
+			<App />
+		</MantineProvider>
+	</StrictMode>,
 );

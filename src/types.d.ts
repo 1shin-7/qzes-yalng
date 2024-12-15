@@ -11,6 +11,8 @@ interface FTNAttributes {
 interface FTNAdvanced {
     header: string
     bgColor: string
+    offsetX: number
+    offsetY: number
     extra: string[]
 }
 

@@ -61,7 +61,7 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 
 	return (
 		<Grid columns={12}>
-			<Grid.Col span={5}>
+			<Grid.Col span={{ base: 12, md: 6, xl: 5 }}>
 				<Paper shadow="sm" p="lg" radius="md" withBorder>
 					<TypographyStylesProvider>
 						<p>
@@ -75,12 +75,12 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 						<p>
 							<h3>指南</h3>
 							<strong>
-								出行条共分为两个版本。其中，日常版具备印章，而周末版本则为校徽;二者在逗号等细微处亦有差别.
+								出行条共分为两个版本。其中，日常版具备印章，而周末版本则为校徽;二者在逗号、logo等细微处亦有差别.
 							</strong>
-							<div style={{ maxWidth: "min-content" }}>
-								<Table data={tableData} />
-							</div>
 						</p>
+						<div style={{ maxWidth: "min-content", overflowX: "scroll" }}>
+							<Table data={tableData} />
+						</div>
 					</TypographyStylesProvider>
 				</Paper>
 			</Grid.Col>

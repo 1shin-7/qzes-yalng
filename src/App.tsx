@@ -11,7 +11,9 @@ import {
 	NumberInput,
 	Paper,
 	SimpleGrid,
+	Slider,
 	Switch,
+	Text,
 	TextInput,
 	Title,
 } from "@mantine/core";
@@ -60,6 +62,8 @@ function App() {
 			? JSON.parse(advancedRaw)
 			: {
 					header: "经家长确认，班主任批准，教官备案，同意",
+					offsetX: 0,
+					offsetY: 0,
 					bgColor: "#fff0",
 					extra: ["noComma"],
 				},
@@ -108,7 +112,13 @@ function App() {
 
 				// Logo
 				if (qzesLogo && !advancedAttr.extra.includes("noLogo")) {
-					ctx.drawImage(qzesLogo, w - 176 - 42, 64, 176, 176);
+					ctx.drawImage(
+						qzesLogo,
+						w - 176 - 42 + advancedAttr.offsetX,
+						64 + advancedAttr.offsetY,
+						176,
+						176,
+					);
 				}
 
 				// 头部
@@ -271,46 +281,52 @@ function App() {
 										}}
 									/>
 								</Grid.Col>
-								<Grid.Col
-									span={{
-										base: 6,
-										xs: 3,
-										md: 6,
-									}}
-									className={
-										advancedAttr.extra.includes("withSign")
-											? undefined
-											: classes.hidden
-									}
-								>
-									<Autocomplete
-										label="印章"
-										description="选择一块印章."
-										data={["骆东强", "欧阳？？"]}
-									/>
-								</Grid.Col>
-								<Grid.Col span={{ base: 6, xs: 3 }}>
-									<DateTimePicker
-										label="离校时间"
-										description="离开学校的时间."
-										valueFormat="MM月D日HH:mm"
-										value={dayjs(qzesData.leaveDate).toDate()}
-										onChange={(d) => {
-											setData({ ...qzesData, leaveDate: d });
+								{advancedAttr.extra.includes("withSign") ? (
+									<Grid.Col
+										span={{
+											base: 6,
+											xs: 3,
+											md: 6,
 										}}
-									/>
-								</Grid.Col>
-								<Grid.Col span={{ base: 6, xs: 3 }}>
-									<DateTimePicker
-										label="返校时间"
-										description="回到学校的时间."
-										valueFormat="MM月D日HH:mm"
-										value={dayjs(qzesData.backDate).toDate()}
-										onChange={(d) => {
-											setData({ ...qzesData, backDate: d });
-										}}
-									/>
-								</Grid.Col>
+										className={
+											advancedAttr.extra.includes("withSign")
+												? undefined
+												: classes.hidden
+										}
+									>
+										<Autocomplete
+											label="印章"
+											description="选择一块印章."
+											data={["骆东强", "欧阳？？"]}
+										/>
+									</Grid.Col>
+								) : undefined}
+								{!advancedAttr.extra.includes("noDate") ? (
+									<>
+										<Grid.Col span={{ base: 6, xs: 3 }}>
+											<DateTimePicker
+												label="离校时间"
+												description="离开学校的时间."
+												valueFormat="MM月D日HH:mm"
+												value={dayjs(qzesData.leaveDate).toDate()}
+												onChange={(d) => {
+													setData({ ...qzesData, leaveDate: d });
+												}}
+											/>
+										</Grid.Col>
+										<Grid.Col span={{ base: 6, xs: 3 }}>
+											<DateTimePicker
+												label="返校时间"
+												description="回到学校的时间."
+												valueFormat="MM月D日HH:mm"
+												value={dayjs(qzesData.backDate).toDate()}
+												onChange={(d) => {
+													setData({ ...qzesData, backDate: d });
+												}}
+											/>
+										</Grid.Col>
+									</>
+								) : undefined}
 							</Grid>
 							<Grid>
 								<Grid.Col>
@@ -356,7 +372,7 @@ function App() {
 													}}
 												/>
 											</Grid.Col>
-											<Grid.Col span={3}>
+											<Grid.Col span={{ base: 6, xs: 3 }}>
 												<ColorInput
 													label="背景色"
 													description="非彩色打印机建议选择透明"
@@ -369,6 +385,39 @@ function App() {
 														if (!e.startsWith("#ffffff")) {
 															SetLogoUrl("logo.png");
 														} // 彩色背景时切换为透明图像
+														else {
+															SetLogoUrl("logo.jpg");
+														}
+													}}
+												/>
+											</Grid.Col>
+											<Grid.Col span={{ base: 6, xs: 3 }}>
+												<Text>
+													X轴偏移{" "}
+													<Text c="orange.3" span>
+														[{advancedAttr.offsetX}]
+													</Text>
+												</Text>
+												<Slider
+													min={-15}
+													max={15}
+													value={advancedAttr.offsetX}
+													onChange={(v) => {
+														setAdvancedData({ ...advancedAttr, offsetX: v });
+													}}
+												/>
+												<Text>
+													Y轴偏移{" "}
+													<Text c="orange.3" span>
+														[{advancedAttr.offsetY}]
+													</Text>
+												</Text>
+												<Slider
+													min={-15}
+													max={15}
+													value={advancedAttr.offsetY}
+													onChange={(v) => {
+														setAdvancedData({ ...advancedAttr, offsetY: v });
 													}}
 												/>
 											</Grid.Col>
