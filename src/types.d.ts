@@ -10,6 +10,7 @@ interface FTNAttributes {
 
 interface FTNAdvanced {
     header: string
+    bgColor: string
     extra: string[]
 }
 

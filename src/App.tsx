@@ -3,6 +3,7 @@ import {
 	Autocomplete,
 	Button,
 	Collapse,
+	ColorInput,
 	Flex,
 	Grid,
 	Group,
@@ -20,6 +21,8 @@ import {
 	IconBrandGithub,
 	IconChevronDown,
 	IconChevronUp,
+	IconFileDownload,
+	IconPhotoDown,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -56,6 +59,7 @@ function App() {
 			? JSON.parse(advancedRaw)
 			: {
 					header: "经家长确认，班主任批准，教官备案，同意",
+					bgColor: "#fff0",
 					extra: ["noComma"],
 				},
 	);
@@ -89,8 +93,8 @@ function App() {
 				const h = ctx.canvas.height;
 
 				ctx.clearRect(0, 0, w, h);
-				// ctx.fillStyle = "#f8f9fa"; // --mantine-color-gray-0
-				// ctx.fillRect(0, 0, w, h);
+				ctx.fillStyle = advancedAttr.bgColor;
+				ctx.fillRect(0, 0, w, h);
 
 				// 标题
 				ctx.fillStyle = "#000";
@@ -209,6 +213,7 @@ function App() {
 									className={classes.dlBtn}
 									onClick={download}
 									style={{ flexGrow: 1 }}
+									leftSection={<IconPhotoDown />}
 								>
 									Download
 								</Button>
@@ -216,6 +221,7 @@ function App() {
 									className={classes.dlBtn}
 									onClick={download}
 									style={{ flexGrow: 2 }}
+									leftSection={<IconFileDownload />}
 								>
 									Download Full Page
 								</Button>
@@ -347,6 +353,17 @@ function App() {
 															header: d.target.value,
 														});
 													}}
+												/>
+											</Grid.Col>
+											<Grid.Col span={3}>
+												<ColorInput
+													label="背景色"
+													description="非彩色打印机建议选择透明"
+													value={advancedAttr.bgColor}
+													format="hexa"
+													onChange={(d) =>
+														setAdvancedData({ ...advancedAttr, bgColor: d })
+													}
 												/>
 											</Grid.Col>
 										</Grid>
