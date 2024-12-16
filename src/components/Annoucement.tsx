@@ -8,6 +8,8 @@ import {
 } from "@mantine/core";
 import type { FTNAdvanced, FTNAttributes } from "../types";
 
+import classes from "./Annoucement.module.css";
+
 interface AnnoucementProps {
 	setData: React.Dispatch<React.SetStateAction<FTNAttributes>>;
 	setExtra: React.Dispatch<React.SetStateAction<FTNAdvanced>>;
@@ -24,7 +26,6 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 					setExtra((prev) => {
 						return {
 							...prev,
-							header: prev.header.replace(/[,，]/g, ""),
 							extra: ["noLogo", "withSign", "noDate"],
 						};
 					});
@@ -42,6 +43,7 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 					setExtra((prev) => {
 						return {
 							...prev,
+							header: prev.header.replace(/[,，]/g, ""),
 							extra: ["noSign", "noComma"],
 						};
 					})
@@ -78,7 +80,7 @@ const Annoucement: React.FC<AnnoucementProps> = ({ setData, setExtra }) => {
 								出行条共分为两个版本。其中，日常版具备印章，而周末版本则为校徽;二者在逗号、logo等细微处亦有差别.
 							</strong>
 						</p>
-						<div style={{ maxWidth: "min-content", overflowX: "scroll" }}>
+						<div className={classes.cmpTable}>
 							<Table data={tableData} />
 						</div>
 					</TypographyStylesProvider>
